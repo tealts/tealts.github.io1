@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kamus Teknik Informatika</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #5c5a5a;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #5c5a5a;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        text-align: center;
+        color: hsl(0, 0%, 100%);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ffffff;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      tr:hover {
+        background-color: #f5f5f5;
+      }
+      /* Desain tombol */
+      .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #bcc4bc;
+        color: rgb(0, 0, 0);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        text-decoration: none;
+        margin-right: 5px;
+        margin-bottom: 10px;
+        font-size: 18px;
+      }
+      .btn:hover {
+        background-color: #0073aa;
+      }
+      .center-btn {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .search-container {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .search-input {
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        width: 200px;
+      }
+      .search-btn {
+        padding: 12px 24px; /* Lebih besar */
+        border: none;
+        background-color: #373f37;
+        color: rgb(255, 255, 255);
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      .search-btn:hover {
+        background-color: #93a393;
+      }
+      .word-btn {
+        width: 100%; /* Lebih lebar */
+        height: 60px; /* Lebih tinggi */
+        margin-bottom: 10px;
+        display: block;
+        text-align: center;
+      }
+      .english {
+        font-weight: bold;
+      }
+      .count-btn {
+        padding: 10px 20px;
+        background-color: #bcc4bc;
+        color: rgb(0, 0, 0);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        text-decoration: none;
+        margin-right: 5px;
+        margin-bottom: 10px;
+        font-size: 18px;
+      }
+      .count-btn:hover {
+        background-color: #0073aa;
+      }
+      .total-count {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Kamus Teknik Informatika</h1>
+      <div class="search-container">
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="Cari kata..."
+        />
+        <button class="search-btn" onclick="search()">Cari</button>
+      </div>
+      <div class="center-btn">
+        <button class="count-btn" onclick="countWords()">
+          Hitung Jumlah Kosakata
+        </button>
+        <button class="btn" onclick="sortAlphabet()">Urutkan Abjad</button>
+        <div class="total-count" id="totalCount"></div>
+      </div>
+      <table id="kamusTable">
+        <tbody>
+          <!-- Data kamus akan dimasukkan di sini -->
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      // Data kamus dalam format array
+      var kamusData = [
+        { indo: "Perangkat Lunak Terabaikan", inggris: "Abandonware" },
+        { indo: "Mutlak", inggris: "Absolute" },
+        { indo: "Virtualisasi", inggris: "Virtualization" },
+        { indo: "Virus", inggris: "Virus" },
+        { indo: "Abstraksi", inggris: "Abstraction" },
+        {
+          indo: "Unit Pemrosesan Pusat",
+          inggris: "Central Processing Unit (CPU)",
+        },
+        { indo: "Lokalisasi", inggris: "Localization" },
+        { indo: "Perulangan", inggris: "Loop" },
+        { indo: "Algoritma Aktor-Kritik", inggris: "Actor-Critic Algorithm" },
+        { indo: "Bagian depan", inggris: "Front End" },
+        { indo: "Fungsi", inggris: "Function" },
+        { indo: "Logika Fuzzy", inggris: "Fuzzy Logic" },
+        { indo: "Penyesuaian", inggris: "Adapter" },
+        { indo: "Bagian belakang", inggris: "Back End" },
+        { indo: "Penyebaran Balik", inggris: "Back Propagation" },
+        { indo: "Pembelajaran Adaptif", inggris: "Adaptive Learning" },
+        { indo: "Contoh Adversarial", inggris: "Adversarial Examples" },
+        {
+          indo: "Pembelajaran Mesin Adversarial",
+          inggris: "Adversarial Machine Learning",
+        },
+        { indo: "Kencang", inggris: "Agile" },
+        { indo: "Pengembangan agile", inggris: "Agile Development" },
+        { indo: "Algoritma Aho-Corasick", inggris: "Aho-Corasick Algorithm" },
+        {
+          indo: "AI (Kecerdasan Buatan)",
+          inggris: "AI (Artificial Intelligence)",
+        },
+        { indo: "Algoritma", inggris: "Algorithm" },
+        {
+          indo: "Kuadrat Terkecil Bergantian",
+          inggris: "Alternating Least Squares (ALS)",
+        },
+        { indo: "Analisis", inggris: "Analysis" },
+        { indo: "Robotik Antropomorfik", inggris: "Anthropomorphic Robotics" },
+        { indo: "Antarmuka Pemrograman Aplikasi", inggris: "API" },
+        { indo: "Applet", inggris: "Applet" },
+        { indo: "Larik", inggris: "Array" },
+        {
+          indo: "Jaringan Saraf Tiruan",
+          inggris: "Artificial Neural Network (ANN)",
+        },
+        {
+          indo: "Pemrograman Berorientasi Aspek",
+          inggris: "Aspect-Oriented Programming (AOP)",
+        },
+        { indo: "Pengumpul", inggris: "Assembler" },
+        { indo: "Asinkron", inggris: "Asynchronous" },
+        { indo: "Atomisitas", inggris: "Atomicity" },
+        { indo: "Mekanisme Perhatian", inggris: "Attention Mechanism" },
+        { indo: "Realitas Tertambah (AR)", inggris: "Augmented Reality (AR)" },
+        { indo: "Autentikasi", inggris: "Authentication" },
+        { indo: "Pembelajaran Mesin Otomatis", inggris: "AutoML" },
+        { indo: "Bagian belakang", inggris: "Backend" },
+        { indo: "Penyebaran Balik", inggris: "Backpropagation" },
+        {
+          indo: "Propagasi Balik Melalui Waktu",
+          inggris: "Backpropagation Through Time (BPTT)",
+        },
+        { indo: "Cadangan", inggris: "Backup" },
+        { indo: "Keseimbangan", inggris: "Balance" },
+        { indo: "Lebar pita", inggris: "Bandwidth" },
+        { indo: "Skrip Bash", inggris: "Bash Scripting" },
+        { indo: "Desent Anak Tangga Batch", inggris: "Batch Gradient Descent" },
+        { indo: "Normalisasi Batch", inggris: "Batch Normalization" },
+        { indo: "Jaringan Bayesian", inggris: "Bayesian Network" },
+        { indo: "Optimisasi Bayesian", inggris: "Bayesian Optimization" },
+        { indo: "Data Besar", inggris: "Big Data" },
+        { indo: "Biner", inggris: "Binary" },
+        { indo: "Metode biseksi", inggris: "Bisection Method" },
+        { indo: "Bit", inggris: "Bit" },
+        { indo: "Rantai Blok", inggris: "Blockchain" },
+        { indo: "Penyaring Bloom", inggris: "Bloom Filter" },
+        { indo: "Mesin Boltzmann", inggris: "Boltzmann Machine" },
+        { indo: "Boolean", inggris: "Boolean" },
+        { indo: "Bootstrap", inggris: "Bootstrap" },
+        { indo: "Buffer", inggris: "Buffer" },
+        { indo: "Bug", inggris: "Bug" },
+        { indo: "Kode Byte", inggris: "Bytecode" },
+        { indo: "Cache", inggris: "Cache" },
+        { indo: "Jaringan Kapsul", inggris: "Capsule Network" },
+        { indo: "Distribusi Kategorika", inggris: "Categorical Distribution" },
+        { indo: "Kelas", inggris: "Class" },
+        { indo: "Klien", inggris: "Client" },
+        { indo: "Klien-Server", inggris: "Client-Server" },
+        { indo: "Komputasi awan", inggris: "Cloud Computing" },
+        { indo: "Natif Awan", inggris: "Cloud Native" },
+        { indo: "Penyimpanan Awan", inggris: "Cloud Storage" },
+        { indo: "Penyaringan Kolaboratif", inggris: "Collaborative Filtering" },
+        {
+          indo: "Optimisasi Kombinatorial",
+          inggris: "Combinatorial Optimization",
+        },
+        { indo: "Kompilator", inggris: "Compiler" },
+        { indo: "Kompresi", inggris: "Compression" },
+        { indo: "Ilmu Komputer", inggris: "Computer Science" },
+        { indo: "Pengujian Concolic", inggris: "Concolic Testing" },
+        { indo: "Pengendalian Kesamaan Waktu", inggris: "Concurrency Control" },
+        { indo: "Algoritma Konsensus", inggris: "Consensus Algorithm" },
+        {
+          indo: "Sistem Manajemen Konten",
+          inggris: "Content Management System (CMS)",
+        },
+        { indo: "Pembelajaran Kontras", inggris: "Contrastive Learning" },
+        { indo: "Pengendali", inggris: "Controller" },
+        {
+          indo: "Jaringan Saraf Konvolusional",
+          inggris: "Convolutional Neural Network (CNN)",
+        },
+        { indo: "Asisten Bukti Coq", inggris: "Coq Proof Assistant" },
+        {
+          indo: "Prediksi Kontrafaktual",
+          inggris: "Counterfactual Prediction",
+        },
+        { indo: "Kriptografi", inggris: "Cryptography" },
+        { indo: "Lembar Gaya Kaskade", inggris: "CSS" },
+        { indo: "Keamanan Siber", inggris: "Cybersecurity" },
+        { indo: "Daemon", inggris: "Daemon" },
+        { indo: "Anonimisasi Data", inggris: "Data Anonymization" },
+        { indo: "Pengisian Data", inggris: "Data Imputation" },
+        { indo: "Pencarian data", inggris: "Data Mining" },
+        { indo: "Basis data", inggris: "Database" },
+        { indo: "Kekosongan", inggris: "Deadlock" },
+        { indo: "Pemecahan masalah", inggris: "Debug" },
+        { indo: "Deklarasi", inggris: "Declaration" },
+        {
+          indo: "Jaringan Keyakinan Dalam",
+          inggris: "Deep Belief Network (DBN)",
+        },
+        { indo: "Pembelajaran Mendalam", inggris: "Deep Learning" },
+        { indo: "Teori Dempster-Shafer", inggris: "Dempster-Shafer Theory" },
+        { indo: "Injeksi Ketergantungan", inggris: "Dependency Injection" },
+        {
+          indo: "Komputer Neural Diferensial",
+          inggris: "Differentiable Neural Computer (DNC)",
+        },
+        {
+          indo: "Pemrograman Diferensial",
+          inggris: "Differentiable Programming",
+        },
+        { indo: "Privasi Diferensial", inggris: "Differential Privacy" },
+        {
+          indo: "Graf Acyclic Terarah",
+          inggris: "Directed Acyclic Graph (DAG)",
+        },
+        { indo: "Komputasi terdistribusi", inggris: "Distributed Computing" },
+        {
+          indo: "Teknologi Buku Besar Terdistribusi",
+          inggris: "Distributed Ledger Technology (DLT)",
+        },
+        {
+          indo: "DNS (Sistem Nama Domain)",
+          inggris: "DNS (Domain Name System)",
+        },
+        { indo: "Swarm Docker", inggris: "Docker Swarm" },
+        {
+          indo: "Bahasa Khusus Domain",
+          inggris: "Domain-Specific Language (DSL)",
+        },
+        { indo: "Komputasi Tepi", inggris: "Edge Computing" },
+        {
+          indo: "Sentralitas Vektor Eigen",
+          inggris: "Eigen vector Centrality",
+        },
+        { indo: "Jaringan Elastis", inggris: "Elastic Net" },
+        { indo: "Elasticsearch", inggris: "Elasticsearch" },
+        { indo: "Sistem Tertanam", inggris: "Embedded Systems" },
+        { indo: "Enkapsulasi", inggris: "Encapsulation" },
+        { indo: "Pengekoder", inggris: "Encoder" },
+        { indo: "Enkripsi", inggris: "Encryption" },
+        { indo: "Enkripsi Ujung ke Ujung", inggris: "End-to-End Encryption" },
+        { indo: "Filter Kalman Gabungan", inggris: "Ensemble Kalman Filter" },
+        { indo: "Pembelajaran Gabungan", inggris: "Ensemble Learning" },
+        { indo: "Penanganan kesalahan", inggris: "Error Handling" },
+        { indo: "Analisis Spektra", inggris: "Spectral Analysis" },
+        { indo: "Hacking Etis", inggris: "Ethical Hacking" },
+        { indo: "Peristiwa", inggris: "Event" },
+        { indo: "Loop Peristiwa", inggris: "Event Loop" },
+        {
+          indo: "Pemrograman berbasis peristiwa",
+          inggris: "Event-Driven Programming",
+        },
+        { indo: "Strategi Evolusi", inggris: "Evolution Strategies" },
+        { indo: "Algoritma Evolusi", inggris: "Evolutionary Algorithm" },
+        { indo: "Pengecualian", inggris: "Exception" },
+        {
+          indo: "Transformasi Fourier Cepat",
+          inggris: "Fast Fourier Transform (FFT)",
+        },
+        { indo: "Favicon", inggris: "Favicon" },
+        {
+          indo: "Jaringan Piramida Fitur",
+          inggris: "Feature Pyramid Network (FPN)",
+        },
+        { indo: "Analisis Federatif", inggris: "Federated Analytics" },
+        { indo: "Pembelajaran Federatif", inggris: "Federated Learning" },
+        { indo: "Berkas", inggris: "File" },
+        {
+          indo: "Mesin Keadaan Terbatas",
+          inggris: "Finite State Machine (FSM)",
+        },
+        { indo: "Tembok api", inggris: "Firewall" },
+        { indo: "Perangkat Lunak", inggris: "Firmware" },
+        { indo: "Hukum Fitts", inggris: "Fitts' Law" },
+        { indo: "Analisis Forensik", inggris: "Forensic Analysis" },
+        { indo: "Kerangka Kerja Fork-Join", inggris: "Fork-Join Framework" },
+        {
+          indo: "Koreksi Kesalahan Maju",
+          inggris: "Forward Error Correction (FEC)",
+        },
+        { indo: "Kinematika Maju", inggris: "Forward Kinematics" },
+        { indo: "Kerangka kerja", inggris: "Framework" },
+        { indo: "Teori Permainan", inggris: "Game Theory" },
+        { indo: "Unit Linier Bertembok", inggris: "Gated Linear Unit (GLU)" },
+        {
+          indo: "Unit Berulang Berpintu",
+          inggris: "Gated Recurrent Unit (GRU)",
+        },
+        { indo: "Gerbang", inggris: "Gateway" },
+        {
+          indo: "Model Campuran Gaussian",
+          inggris: "Gaussian Mixture Model (GMM)",
+        },
+        {
+          indo: "Regresi Proses Gaussian",
+          inggris: "Gaussian Process Regression",
+        },
+        {
+          indo: "Jaringan Generatif Adversarial",
+          inggris: "Generative Adversarial Network (GAN)",
+        },
+        { indo: "Model Generatif", inggris: "Generative Models" },
+        { indo: "Algoritma Genetika", inggris: "Genetic Algorithm" },
+        { indo: "Pemrograman Genetik", inggris: "Genetic Programming" },
+        {
+          indo: "Sistem Informasi Geografis",
+          inggris: "Geographic Information System (GIS)",
+        },
+        { indo: "Gigabyte", inggris: "Gigabyte" },
+        { indo: "Git", inggris: "Git" },
+        { indo: "Grafik", inggris: "Graph" },
+        { indo: "Basis Data Grafik", inggris: "Graph Database" },
+        {
+          indo: "Antarmuka pengguna grafis",
+          inggris: "Graphical User Interface (GUI)",
+        },
+        {
+          indo: "Unit Pengolah Grafis",
+          inggris: "Graphics Processing Unit (GPU)",
+        },
+        { indo: "GraphQL", inggris: "GraphQL" },
+        { indo: "Algoritma Rakus", inggris: "Greedy Algorithm" },
+        {
+          indo: "Eksplorasi Data Genomik",
+          inggris: "Genomic Data Exploration",
+        },
+        { indo: "Hackathon", inggris: "Hackathon" },
+        {
+          indo: "Sistem Berkas Terdistribusi Hadoop",
+          inggris: "Hadoop Distributed File System (HDFS)",
+        },
+        { indo: "Fungsi hash", inggris: "Hash Function" },
+        { indo: "Peta Hash", inggris: "Hash Map" },
+        { indo: "Tabel Hash", inggris: "Hash Table" },
+        { indo: "Hashing", inggris: "Hashing" },
+        { indo: "Header", inggris: "Header" },
+        {
+          indo: "Optimisasi Bebas Hessian",
+          inggris: "Hessian-Free Optimization",
+        },
+        { indo: "Algoritma Heuristik", inggris: "Heuristic Algorithm" },
+        { indo: "Evaluasi Heuristik", inggris: "Heuristic Evaluation" },
+        { indo: "Pengelompokan Hirarkis", inggris: "Hierarchical Clustering" },
+        {
+          indo: "Model Basis Data Hirarkis",
+          inggris: "Hierarchical Database Model",
+        },
+        { indo: "Struktur hirarkis", inggris: "Hierarchical Structure" },
+        {
+          indo: "Memori Temporal Hirarkis",
+          inggris: "Hierarchical Temporal Memory (HTM)",
+        },
+        { indo: "Enkripsi Homomorfik", inggris: "Homomorphic Encryption" },
+        { indo: "Honeynet", inggris: "Honeynet" },
+        { indo: "Bahasa Markup Hiperteks", inggris: "HTML" },
+        { indo: "HTTP", inggris: "HTTP" },
+        { indo: "Hyperledger", inggris: "Hyperledger" },
+        { indo: "Hyperledger Fabric", inggris: "Hyperledger Fabric" },
+        { indo: "Penyetelan Hipermeter", inggris: "Hyperparameter Tuning" },
+        {
+          indo: "IaaS (Infrastruktur sebagai Layanan)",
+          inggris: "IaaS (Infrastructure as a Service)",
+        },
+        { indo: "Segmentasi Gambar", inggris: "Image Segmentation" },
+        { indo: "Pembelajaran Imitasi", inggris: "Imitation Learning" },
+        { indo: "Tidak berubah", inggris: "Immutable" },
+        { indo: "Komputasi di Memori", inggris: "In-Memory Computing" },
+        { indo: "Basis Data di Memori", inggris: "In-Memory Database" },
+        { indo: "Modul Insepsi", inggris: "Inception Module" },
+        { indo: "Indeks", inggris: "Index" },
+        {
+          indo: "Pemrograman Logika Induktif",
+          inggris: "Inductive Logic Programming",
+        },
+        { indo: "Penyumbat Informasi", inggris: "Information Bottleneck" },
+        { indo: "Pengambilan Informasi", inggris: "Information Retrieval" },
+        { indo: "Pewarisan", inggris: "Inheritance" },
+        { indo: "Masukan", inggris: "Input" },
+        { indo: "Segmentasi Contoh", inggris: "Instance Segmentation" },
+        {
+          indo: "Arsitektur Set Instruksi",
+          inggris: "Instruction Set Architecture (ISA)",
+        },
+        { indo: "Bilangan Bulat", inggris: "Integer" },
+        {
+          indo: "Lingkungan Pengembangan Terpadu",
+          inggris: "Integrated Development Environment",
+        },
+        { indo: "Antarmuka", inggris: "Interface" },
+        { indo: "Internet", inggris: "Internet" },
+        {
+          indo: "Internet of Things (IoT)",
+          inggris: "Internet of Things (IoT)",
+        },
+        {
+          indo: "Pembelajaran Mesin Diinterpretasikan",
+          inggris: "Interpretable Machine Learning",
+        },
+        { indo: "Kontrol Versi", inggris: "Version Control" },
+        { indo: "Pemberian Versi", inggris: "Versioning" },
+        { indo: "Mesin Virtual", inggris: "Virtual Machine" },
+        { indo: "Memori Virtual", inggris: "Virtual Memory" },
+        {
+          indo: "Jaringan Pribadi Virtual",
+          inggris: "Virtual Private Network (VPN)",
+        },
+        { indo: "Realitas Virtual", inggris: "Virtual Reality (VR)" },
+        { indo: "Algoritma Viterbi", inggris: "Viterbi Algorithm" },
+        { indo: "Kerentanan", inggris: "Vulnerability" },
+        { indo: "Penilaian Kerentanan", inggris: "Vulnerability Assessment" },
+        { indo: "Jarak Wasserstein", inggris: "Wasserstein Distance" },
+        { indo: "Model Air Terjun", inggris: "Waterfall Model" },
+        { indo: "Transformasi Gelombang", inggris: "Wavelet Transform" },
+        { indo: "Pengawasan Lemah", inggris: "Weak Supervision" },
+        {
+          indo: "Firewall Aplikasi Web",
+          inggris: "Web Application Firewall (WAF)",
+        },
+        { indo: "Montase Web", inggris: "Web Assembly (Wasm)" },
+        { indo: "Pencabutan Web", inggris: "Web Scraping" },
+        { indo: "Soket Web", inggris: "Web Socket" },
+        { indo: "Normalisasi Berat", inggris: "Weight Normalization" },
+        { indo: "Spasi Putih", inggris: "Whitespace" },
+        { indo: "Wildcard", inggris: "Wildcard" },
+        { indo: "Windows", inggris: "Windows" },
+        { indo: "Jaringan nirkabel", inggris: "Wireless Network" },
+        { indo: "Penggandaan Kata", inggris: "Word Embedding" },
+        { indo: "Peningkatan Tulis", inggris: "Write Amplification" },
+        { indo: "Pengelompokan X-Means", inggris: "X-Means Clustering" },
+        { indo: "Jaringan Xception", inggris: "Xception Network" },
+        { indo: "Hypervisor Xen", inggris: "Xen Hypervisor" },
+        { indo: "Bahasa Tanda", inggris: "Eksentrik XML" },
+        { indo: "Bahasa Jalur XML", inggris: "XML Path Language (XPath)" },
+        { indo: "Enkripsi XOR", inggris: "XOR Encryption" },
+        { indo: "Jaringan Saraf XOR", inggris: "XOR Neural Network" },
+        { indo: "Algoritma Pertukaran XOR", inggris: "XOR Swap Algorithm" },
+        {
+          indo: "XSS (Cross-Site Scripting)",
+          inggris: "XSS (Cross-Site Scripting)",
+        },
+        { indo: "Perlindungan XSS", inggris: "XSS Protection" },
+        { indo: "Bahasa Markup Ain", inggris: "YAML" },
+        { indo: "Aturan YARA", inggris: "YARA Rules" },
+        { indo: "Pemodelan Kurva Hasil", inggris: "Yield Curve Modeling" },
+        {
+          indo: "YOLO (Anda Hanya Melihat Sekali)",
+          inggris: "YOLO (You Only Look Once)",
+        },
+        { indo: "Indeks Z", inggris: "Z-index" },
+        { indo: "Normalisasi Skor Z", inggris: "Z-Score Normalization" },
+        { indo: "Protokol Z-Wave", inggris: "Z-Wave Protocol" },
+        {
+          indo: "Teori Himpunan Zermelo-Fraenkel",
+          inggris: "Zermelo-Fraenkel Set Theory",
+        },
+        { indo: "Bukti Pengetahuan Nol", inggris: "Zero Knowledge Proof" },
+        {
+          indo: "Model Keamanan Zero Trust",
+          inggris: "Zero Trust Security Model",
+        },
+        { indo: "Eksploitasi Hari Nol", inggris: "Zero-Day Exploit" },
+        { indo: "Model Terisi Nol", inggris: "Zero-Inflated Model" },
+        { indo: "Bukti Pengetahuan Nol", inggris: "Zero-Knowledge Proof" },
+        { indo: "Pembelajaran Tanpa Tembakan", inggris: "Zero-Shot Learning" },
+        {
+          indo: "Pengembangan perangkat lunak",
+          inggris: "Software Development",
+        },
+        { indo: "Bahasa Permintaan Terstruktur", inggris: "SQL" },
+        { indo: "Tumpukan", inggris: "Stack" },
+        {
+          indo: "Negara-Aksi-Hadiah-Negara-Aksi",
+          inggris: "State-Action-Reward-State-Action",
+        },
+        { indo: "Berkeadaan", inggris: "Stateful" },
+        {
+          indo: "Desent Anak Tangga Stokastik",
+          inggris: "Stochastic Gradient Descent",
+        },
+        { indo: "Teks", inggris: "String" },
+        { indo: "Pengetikan Kuat", inggris: "Strong Typing" },
+        {
+          indo: "Mesin Vektor Pendukung",
+          inggris: "Support Vector Machine (SVM)",
+        },
+        { indo: "Sintaks", inggris: "Syntax" },
+        {
+          indo: "Protokol Kontrol Transmisi",
+          inggris: "Transmission Control Protocol (TCP)",
+        },
+        {
+          indo: "Jaringan Konvolusi Temporal",
+          inggris: "Temporal Convolutional Network (TCN)",
+        },
+        { indo: "Logika Temporal", inggris: "Temporal Logic" },
+        {
+          indo: "Pembelajaran Diferensial Temporal",
+          inggris: "Temporal-Difference Learning",
+        },
+        { indo: "TensorFlow", inggris: "TensorFlow" },
+        { indo: "Terminal", inggris: "Terminal" },
+        { indo: "Operator ternary", inggris: "Ternary Operator" },
+        { indo: "Cakupan Pengujian", inggris: "Test Coverage" },
+        {
+          indo: "Pengembangan Berbasis Tes",
+          inggris: "Test-Driven Development (TDD)",
+        },
+        { indo: "Pengujian", inggris: "Testing" },
+        { indo: "Jabat tangan tiga arah", inggris: "Three-Way Handshake" },
+        { indo: "Token", inggris: "Token" },
+        {
+          indo: "Analisis Data Topologis",
+          inggris: "Topological Data Analysis (TDA)",
+        },
+        { indo: "Transaksi", inggris: "Transaction" },
+        { indo: "Isolasi Transaksi", inggris: "Transaction Isolation" },
+        {
+          indo: "Sistem Pemrosesan Transaksi",
+          inggris: "Transaction Processing System (TPS)",
+        },
+        { indo: "Pembelajaran Transfer", inggris: "Transfer Learning" },
+        {
+          indo: "Keamanan Lapisan Transport",
+          inggris: "Transport Layer Security (TLS)",
+        },
+        { indo: "Mesin Turing", inggris: "Turing Machine" },
+        { indo: "Konversi tipe", inggris: "Type Conversion" },
+        {
+          indo: "Model Grafis Tak Terarah",
+          inggris: "Undirected Graphical Model",
+        },
+        { indo: "Unicode", inggris: "Unicode" },
+        {
+          indo: "Bahasa Pemodelan Bersatu",
+          inggris: "Unified Modeling Language (UML)",
+        },
+        {
+          indo: "Teorema Pendekatan Universal",
+          inggris: "Universal Approximation Theorem",
+        },
+        {
+          indo: "Lokator Sumber Universal",
+          inggris: "Universal Resource Locator (URL)",
+        },
+        { indo: "Mesin Turing Universal", inggris: "Universal Turing Machine" },
+        { indo: "Data Tak Berstruktur", inggris: "Unstructured Data" },
+        {
+          indo: "Pembelajaran Tanpa Pengawasan",
+          inggris: "Unsupervised Learning",
+        },
+        { indo: "Encoding URL", inggris: "URL Encoding" },
+        {
+          indo: "Protokol Datagram Pengguna",
+          inggris: "User Datagram Protocol (UDP)",
+        },
+        { indo: "Pengalaman Pengguna", inggris: "User Experience (UX)" },
+        {
+          indo: "Desain Pengalaman Pengguna",
+          inggris: "User Experience Design (UXD)",
+        },
+        { indo: "Antarmuka pengguna", inggris: "User Interface (UI)" },
+        { indo: "Validasi", inggris: "Validation" },
+        {
+          indo: "Dimensi Vapnik-Chervonenkis",
+          inggris: "Vapnik-Chervonenkis Dimension",
+        },
+        { indo: "Variabel", inggris: "Variable" },
+        {
+          indo: "Pengkode Otomatis Variasional",
+          inggris: "Variational Autoencoder (VAE)",
+        },
+        { indo: "Inferensi Variasional", inggris: "Variational Inference" },
+        { indo: "Vektor", inggris: "Vector" },
+        { indo: "Komputasi Kuantum", inggris: "Quantum Computing" },
+        { indo: "Kriptografi Kuantum", inggris: "Quantum Cryptography" },
+        { indo: "Enkripsi Kuantum", inggris: "Quantum Encryption" },
+        { indo: "Keterkaitan Kuantum", inggris: "Quantum Entanglement" },
+        {
+          indo: "Koreksi Kesalahan Kuantum",
+          inggris: "Quantum Error Correction",
+        },
+        {
+          indo: "Distribusi Kunci Kuantum",
+          inggris: "Quantum Key Distribution",
+        },
+        { indo: "Supremasi Kuantum", inggris: "Quantum Supremacy" },
+        { indo: "Metode Quasi-Newton", inggris: "Quasi-Newton Method" },
+        { indo: "Bahasa kueri", inggris: "Query Language" },
+        { indo: "Optimasi Kueri", inggris: "Query Optimization" },
+        { indo: "Antrian", inggris: "Queue" },
+        {
+          indo: "Algoritma Quine-McCluskey",
+          inggris: "Quine-McCluskey Algorithm",
+        },
+        { indo: "Fungsi Basis Radial", inggris: "Radial Basis Function (RBF)" },
+        { indo: "Hutan Acak", inggris: "Random Forest" },
+        { indo: "Proyeksi Acak", inggris: "Random Projection" },
+        { indo: "Pemrograman Reaktif", inggris: "Reactive Programming" },
+        {
+          indo: "Jaringan Saraf Berulang",
+          inggris: "Recurrent Neural Network (RNN)",
+        },
+        {
+          indo: "Pembelajaran Penguatan Berulang",
+          inggris: "Recurrent Reinforcement Learning",
+        },
+        { indo: "Rekursi", inggris: "Recursion" },
+        { indo: "Ekspresi Reguler", inggris: "Regex" },
+        { indo: "Registrasi", inggris: "Registry" },
+        { indo: "Pengujian Regresi", inggris: "Regression Testing" },
+        { indo: "Pembelajaran Penguatan", inggris: "Reinforcement Learning" },
+        { indo: "Repositori", inggris: "Repository" },
+        { indo: "Komputasi Reservoir", inggris: "Reservoir Computing" },
+        {
+          indo: "Desain Web Responsif",
+          inggris: "Responsive Web Design (RWD)",
+        },
+        { indo: "Representational State Transfer", inggris: "REST" },
+        { indo: "API RESTful", inggris: "RESTful API" },
+        { indo: "Rekayasa Balik", inggris: "Reverse Engineering" },
+        {
+          indo: "Otomatisasi Proses Robotik",
+          inggris: "Robotic Process Automation (RPA)",
+        },
+        { indo: "Rootkit", inggris: "Rootkit" },
+        { indo: "Putaran Berturut-turut", inggris: "Round Robin" },
+        { indo: "Router", inggris: "Router" },
+        { indo: "Routing", inggris: "Routing" },
+        { indo: "Bahasa Pemrograman Ruby", inggris: "Ruby" },
+        { indo: "Skalabilitas", inggris: "Scalability" },
+        {
+          indo: "Kit Pengembangan Perangkat Lunak",
+          inggris: "Software Development Kit (SDK)",
+        },
+        { indo: "Keamanan", inggris: "Security" },
+        {
+          indo: "Model Urutan ke Urutan",
+          inggris: "Sequence-to-Sequence Model",
+        },
+        { indo: "Server", inggris: "Server" },
+        { indo: "Peternakan Server", inggris: "Server Farm" },
+        { indo: "Rendering Sisi Server", inggris: "Server-Side Rendering" },
+        { indo: "Tanpa Server", inggris: "Serverless" },
+        {
+          indo: "Arsitektur Berorientasi Layanan",
+          inggris: "Service-Oriented Architecture (SOA)",
+        },
+        { indo: "Sesi", inggris: "Session" },
+        { indo: "Entropi Shannon", inggris: "Shannon Entropy" },
+        { indo: "Pemanasan Simulasi", inggris: "Simulated Annealing" },
+        { indo: "Pola Singleton", inggris: "Singleton Pattern" },
+        {
+          indo: "Dekomposisi Nilai Tunggal",
+          inggris: "Singular Value Decomposition (SVD)",
+        },
+        { indo: "Perangkat lunak", inggris: "Software" },
+        { indo: "Penekanan Non-Maksimum", inggris: "Non-Maximum Suppression" },
+        { indo: "Basis Data NoSQL", inggris: "NoSQL Database" },
+        { indo: "Objek", inggris: "Object" },
+        { indo: "Pengenalan Objek", inggris: "Object Recognition" },
+        { indo: "Berorientasi objek", inggris: "Object-Oriented" },
+        {
+          indo: "Pemrograman berorientasi objek",
+          inggris: "Object-Oriented Programming (OOP)",
+        },
+        {
+          indo: "Pemetaan Objek-Relasional",
+          inggris: "Object-Relational Mapping (ORM)",
+        },
+        { indo: "Pola Pengamat", inggris: "Observer Pattern" },
+        { indo: "Klasifikasi Satu Kelas", inggris: "One-Class Classification" },
+        { indo: "Encoding Satu-Panas", inggris: "One-Hot Encoding" },
+        {
+          indo: "Pemrosesan Analitis Daring",
+          inggris: "Online Analytical Processing (OLAP)",
+        },
+        {
+          indo: "Optimisasi Konveks Daring",
+          inggris: "Online Convex Optimization",
+        },
+        { indo: "Pembelajaran Daring", inggris: "Online Learning" },
+        { indo: "Sumber Terbuka", inggris: "Open Source" },
+        { indo: "Gim OpenAI", inggris: "OpenAI Gym" },
+        {
+          indo: "OpenCV (Visi Komputer Sumber Terbuka)",
+          inggris: "OpenCV (Open Source Computer Vision)",
+        },
+        { indo: "Sistem operasi", inggris: "Operating System" },
+        { indo: "Teori Kontrol Optimal", inggris: "Optimal Control Theory" },
+        { indo: "Alat Orkestrasi", inggris: "Orchestration Tools" },
+        { indo: "Ortogonal", inggris: "Orthogonal" },
+        { indo: "Keluaran", inggris: "Output" },
+        { indo: "Paket", inggris: "Package" },
+        { indo: "Penyadapan Paket", inggris: "Packet Sniffing" },
+        {
+          indo: "Pengelolaan Memori Berkas",
+          inggris: "Paged Memory Management",
+        },
+        { indo: "Penyusunan Halaman", inggris: "Pagination" },
+        { indo: "Parameter", inggris: "Parameter" },
+        { indo: "Pengurai", inggris: "Parser" },
+        { indo: "Hash Kata Sandi", inggris: "Password Hashing" },
+        { indo: "Perseptron", inggris: "Perceptron" },
+        { indo: "Hashing Perseptual", inggris: "Perceptual Hashing" },
+        { indo: "PHP", inggris: "PHP" },
+        { indo: "Keamanan Fisik", inggris: "Physical Security" },
+        { indo: "Plugin", inggris: "Plugin" },
+        { indo: "Penunjuk", inggris: "Pointer" },
+        {
+          indo: "Metode Gradien Kebijakan",
+          inggris: "Policy Gradient Methods",
+        },
+        { indo: "Polimorfisme", inggris: "Polymorphism" },
+        { indo: "Port", inggris: "Port" },
+        {
+          indo: "Analisis Komponen Utama",
+          inggris: "Principal Component Analysis (PCA)",
+        },
+        { indo: "Kurva Utama", inggris: "Principal Curves" },
+        {
+          indo: "Model Grafis Probabilistik",
+          inggris: "Probabilistic Graphical Model",
+        },
+        { indo: "Protokol", inggris: "Protocol" },
+        { indo: "Protokol Buffer", inggris: "Protocol Buffers" },
+        { indo: "Pemangkasan", inggris: "Pruning" },
+        {
+          indo: "Pembangkit Bilangan Acak Pseudo",
+          inggris: "Pseudo-Random Number Generator",
+        },
+        { indo: "Python", inggris: "Python" },
+        { indo: "Indeks Paket Python", inggris: "Python Package Index (PyPI)" },
+        { indo: "Pembelajaran Q", inggris: "Q-Learning" },
+        { indo: "Jaminan Kualitas", inggris: "Quality Assurance (QA)" },
+        { indo: "Pemanasan Kuantum", inggris: "Quantum Annealing" },
+        { indo: "Sirkuit Kuantum", inggris: "Quantum Circuit" },
+        { indo: "Penerjemah", inggris: "Interpreter" },
+        {
+          indo: "Sistem Deteksi Intrusi",
+          inggris: "Intrusion Detection System (IDS)",
+        },
+        {
+          indo: "IPsec (Keamanan Protokol Internet)",
+          inggris: "IPsec (Internet Protocol Security)",
+        },
+        { indo: "Protokol Versi Internet 6", inggris: "IPv6" },
+        { indo: "Iterasi", inggris: "Iteration" },
+        { indo: "Metode iteratif", inggris: "Iterative Method" },
+        { indo: "Indeks Jaccard", inggris: "Jaccard Index" },
+        { indo: "Mesin Virtual Java", inggris: "Java Virtual Machine (JVM)" },
+        { indo: "Javadoc", inggris: "Javadoc" },
+        { indo: "Bahasa Pemrograman JavaScript", inggris: "JavaScript" },
+        { indo: "Kerangka kerja JavaScript", inggris: "JavaScript Framework" },
+        { indo: "Perpustakaan JavaScript", inggris: "JavaScript Library" },
+        {
+          indo: "Notasi Objek JavaScript",
+          inggris: "JavaScript Object Notation (JSON)",
+        },
+        {
+          indo: "Bahasa Kontrol Pekerjaan",
+          inggris: "Job Control Language (JCL)",
+        },
+        { indo: "Penjadwal Pekerjaan", inggris: "Job Scheduler" },
+        { indo: "Indeks Gabung", inggris: "Join Index" },
+        { indo: "Operasi Gabung", inggris: "Join Operation" },
+        { indo: "Distribusi Gabungan", inggris: "Joint Distribution" },
+        {
+          indo: "Distribusi Peluang Gabungan",
+          inggris: "Joint Probability Distribution",
+        },
+        { indo: "Notasi Objek JavaScript", inggris: "JSON" },
+        { indo: "Token Web JSON", inggris: "JSON Web Token (JWT)" },
+        { indo: "Buku Catatan Jupyter", inggris: "Jupyter Notebook" },
+        {
+          indo: "Perbedaan yang Baru Sadar",
+          inggris: "Just Noticeable Difference (JND)",
+        },
+        {
+          indo: "Kompilasi Just-In-Time (JIT)",
+          inggris: "Just-In-Time (JIT) Compilation",
+        },
+        { indo: "Pengelompokan K-Means", inggris: "K-Means Clustering" },
+        { indo: "Tetangga Terdekat K", inggris: "K-Nearest Neighbors (KNN)" },
+        { indo: "Autentikasi Kerberos", inggris: "Kerberos Authentication" },
+        { indo: "Kernel", inggris: "Kernel" },
+        { indo: "Panic Kernel", inggris: "Kernel Panic" },
+        { indo: "Basis Data Kunci-nilai", inggris: "Key-Value Database" },
+        { indo: "Pasangan Kunci-nilai", inggris: "Key-Value Pair" },
+        { indo: "Penyimpanan Kunci-nilai", inggris: "Key-Value Store" },
+        { indo: "Papan ketik", inggris: "Keyboard" },
+        { indo: "Kata Kunci", inggris: "Keyword" },
+        { indo: "Kilobyte", inggris: "Kilobyte" },
+        { indo: "Basis Pengetahuan", inggris: "Knowledge Base" },
+        { indo: "Graf Pengetahuan", inggris: "Knowledge Graph" },
+        {
+          indo: "Penanaman Graf Pengetahuan",
+          inggris: "Knowledge Graph Embedding",
+        },
+        {
+          indo: "Representasi Pengetahuan",
+          inggris: "Knowledge Representation",
+        },
+        { indo: "Kompleksitas Kolmogorov", inggris: "Kolmogorov Complexity" },
+        { indo: "Uji Kolmogorov-Smirnov", inggris: "Kolmogorov-Smirnov Test" },
+        { indo: "Kubernetes", inggris: "Kubernetes" },
+        {
+          indo: "Divergensi Kullback-Leibler",
+          inggris: "Kullback-Leibler Divergence",
+        },
+        { indo: "Pelunakan Label", inggris: "Label Smoothing" },
+        { indo: "Fungsi Lambda", inggris: "Lambda Function" },
+        { indo: "Piramida Laplacian", inggris: "Laplacian Pyramid" },
+        { indo: "Latensi", inggris: "Latency" },
+        {
+          indo: "Alokasi Dirichlet Laten",
+          inggris: "Latent Dirichlet Allocation (LDA)",
+        },
+        {
+          indo: "Analisis Semantik Laten",
+          inggris: "Latent Semantic Analysis (LSA)",
+        },
+        {
+          indo: "Paling Tidak Lama Digunakan",
+          inggris: "Least Recently Used (LRU)",
+        },
+        { indo: "Perpustakaan", inggris: "Library" },
+        { indo: "Regresi Linier", inggris: "Linear Regression" },
+        { indo: "Daftar Bertaut", inggris: "Linked List" },
+        { indo: "Linux", inggris: "Linux" },
+        { indo: "Penyeimbang Beban", inggris: "Load Balancer" },
+        { indo: "Pengujian Beban", inggris: "Load Testing" },
+        { indo: "Pola Biner Lokal", inggris: "Local Binary Pattern (LBP)" },
+        { indo: "Localhost", inggris: "Localhost" },
+        {
+          indo: "Hashing Sensitif Lokalitas",
+          inggris: "Locality-Sensitive Hashing",
+        },
+        { indo: "Kode mesin", inggris: "Machine Code" },
+        { indo: "Pembelajaran mesin", inggris: "Machine Learning" },
+        { indo: "Penerjemahan Mesin", inggris: "Machine Translation" },
+        { indo: "Visi Mesin", inggris: "Machine Vision" },
+        { indo: "Analisis Malware", inggris: "Malware Analysis" },
+        { indo: "Proses Keputusan Markov", inggris: "Markov Decision Process" },
+        {
+          indo: "Estimasi Kemungkinan Maksimum",
+          inggris: "Maximum Likelihood Estimation (MLE)",
+        },
+        { indo: "Memori", inggris: "Memory" },
+        { indo: "Pembelajaran Meta", inggris: "Meta-Learning" },
+        { indo: "Metadata", inggris: "Metadata" },
+        { indo: "Metapemrograman", inggris: "Metaprogramming" },
+        { indo: "Metode", inggris: "Method" },
+        { indo: "Mikrokontroler", inggris: "Microcontroller" },
+        { indo: "Mikrokernel", inggris: "Microkernel" },
+        { indo: "Layanan Mikro", inggris: "Microservices" },
+        { indo: "Perantara", inggris: "Middleware" },
+        { indo: "Model Campuran", inggris: "Mixture Model" },
+        { indo: "Kompresi Model", inggris: "Model Compression" },
+        {
+          indo: "Pembelajaran Meta Agnostik Model",
+          inggris: "Model-Agnostic Meta-Learning (MAML)",
+        },
+        {
+          indo: "Model-View-Controller",
+          inggris: "Model-View-Controller (MVC)",
+        },
+        {
+          indo: "Pencarian Pohon Monte Carlo",
+          inggris: "Monte Carlo Tree Search (MCTS)",
+        },
+        { indo: "Mouse", inggris: "Mouse" },
+        { indo: "Multithreading", inggris: "Multithreading" },
+        { indo: "Informasi Saling", inggris: "Mutual Information" },
+        { indo: "Klasifikasi Naive Bayes", inggris: "Naive Bayes Classifier" },
+        { indo: "Namespace", inggris: "Namespace" },
+        {
+          indo: "NAT (Penerjemahan Alamat Jaringan)",
+          inggris: "NAT (Network Address Translation)",
+        },
+        {
+          indo: "Generasi Bahasa Alami",
+          inggris: "Natural Language Generation (NLG)",
+        },
+        {
+          indo: "Antarmuka Bahasa Alami",
+          inggris: "Natural Language Interface",
+        },
+        {
+          indo: "Pemrosesan Bahasa Alami",
+          inggris: "Natural Language Processing (NLP)",
+        },
+        {
+          indo: "Pemahaman Bahasa Alami",
+          inggris: "Natural Language Understanding (NLU)",
+        },
+        { indo: "Penanaman", inggris: "Nesting" },
+        { indo: "Jaringan", inggris: "Network" },
+        { indo: "Protokol jaringan", inggris: "Network Protocol" },
+        {
+          indo: "Pencarian Arsitektur Saraf",
+          inggris: "Neural Architecture Search",
+        },
+        { indo: "Neuroevolusi", inggris: "Neuroevolution" },
+        {
+          indo: "Kerangka Keamanan Siber NIST",
+          inggris: "NIST Cybersecurity Framework",
+        },
+        { indo: "Simpul", inggris: "Node" },
+        { indo: "Node.js", inggris: "Node.js" },
+        // Tambahkan data lainnya di sini
+      ];
+
+      var countClicks = 0; // Untuk menghitung jumlah kali tombol "Hitung Jumlah Kata" ditekan
+
+      // Fungsi untuk mengisi tabel dengan data kamus
+      function populateTable() {
+        var tableBody = document
+          .getElementById("kamusTable")
+          .getElementsByTagName("tbody")[0];
+        kamusData.forEach(function (item, index) {
+          var row = tableBody.insertRow();
+          var wordCell = row.insertCell(0);
+          wordCell.colSpan = 2;
+          wordCell.innerHTML =
+            '<button class="btn word-btn" onclick="searchByWord(\'' +
+            item.indo +
+            " / " +
+            item.inggris +
+            '\')"><span class="english">' +
+            item.inggris +
+            "</span><br>" +
+            item.indo +
+            "</button>";
+        });
+      }
+
+      // Fungsi untuk mencari kata
+      function search() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("kamusTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+          td = tr[i].getElementsByTagName("td")[0]; // Cari pada kolom kata
+          if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              tr[i].style.display = "";
+            } else {
+              tr[i].style.display = "none";
+            }
+          }
+        }
+      }
+
+      // Fungsi untuk mencari kata berdasarkan kata tertentu
+      function searchByWord(word) {
+        document.getElementById("searchInput").value = word;
+        search();
+      }
+
+      // Fungsi untuk mengurutkan berdasarkan abjad (bahasa Inggris)
+      function sortAlphabet() {
+        kamusData.sort(function (a, b) {
+          return a.inggris.localeCompare(b.inggris);
+        });
+        clearTable();
+        populateTable();
+      }
+
+      // Fungsi untuk menghitung jumlah kata
+      function countWords() {
+        countClicks++;
+        if (countClicks % 2 === 0) {
+          document.getElementById("totalCount").innerHTML = "";
+        } else {
+          var count = kamusData.length;
+          document.getElementById("totalCount").innerHTML =
+            "Total Kosakata: " + count;
+        }
+      }
+
+      // Fungsi untuk menghapus kata dari kamus
+      function deleteWord(index) {
+        kamusData.splice(index, 1);
+        clearTable();
+        populateTable();
+      }
+
+      // Fungsi untuk mengosongkan isi tabel
+      function clearTable() {
+        var tableBody = document
+          .getElementById("kamusTable")
+          .getElementsByTagName("tbody")[0];
+        tableBody.innerHTML = "";
+      }
+
+      // Fungsi untuk mengisi tabel saat halaman dimuat
+      populateTable();
+    </script>
+  </body>
+</html>
